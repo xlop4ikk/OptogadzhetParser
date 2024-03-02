@@ -11,13 +11,16 @@ import random
 lst_titles = []
 lst_links = []
 lst_prices = []
+absolute_links = []
 headers = ['Наименование', 'Ссылка', 'Цена']
 
 root = Tk()
 root.title("OptogadzhetParser")
-root.geometry("200x100")
+root.geometry("200x200")
 root.resizable(False, False)
 root.configure(bg="white")
+success = Label(root, text="Парсинг прошел успешно!")
+error = Label(root, text="Такой страницы нет!")
 
 def parsing():
     url = 'https://optogadzhet.ru/product-category/apple/iphone/'
@@ -34,7 +37,7 @@ def parsing():
     #print('Ссылки:')
     links = soup.find_all('a', class_='card-item__link')
     for link in links:
-        lst_links.append(link.get("href"))
+        lst_links.append(link.get('href'))
     #print(lst_links)
     
     #print('Цены:')
@@ -51,14 +54,18 @@ def parsing():
     #print(len(lst_links))
     #print(len(lst_prices_final))
     
-    random_number = random.randint(0, 100)
+    """random_number = random.randint(0, 100)
     with open(f'output{random_number}.csv', 'w', newline='', encoding="utf-8") as file:
         writer = csv.writer(file, delimiter=';')
         writer.writerow(headers)
         for data in zip(lst_titles, lst_links, lst_prices_final):
-            writer.writerow(data)
+            writer.writerow(data)"""
 
 #parsing()
+label = Label(root, text="Введите номер страницы:", bg="white", fg="black", font=("Consolas", 11))
+texbox = Entry(root, width=25)
 button = Button(root, text="Начать парсинг!", width=20, height=3, command=parsing)
-button.place(relx=0.5, rely=0.5, anchor=CENTER)
+label.pack(ipadx=20, ipady=8, pady=5, side= "top")
+texbox.pack(ipadx=20, ipady=0, pady=5, side= "top")
+button.pack(ipadx=20, ipady=8, pady=5, side= "top")
 root.mainloop()
