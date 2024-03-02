@@ -10,10 +10,12 @@ from tkinter import *
 headers = ['Наименование', 'Ссылка', 'Цена']
 root = Tk()
 root.title("OptogadzhetParser")
-root.geometry("200x200")
+root.geometry("200x220")
 root.resizable(False, False)
 root.configure(bg="white")
-label = Label(root, text="Введите номер страницы:", bg="white", fg="black", font=("Consolas", 11))
+label_name_of_product = Label(root, text="Введите наименование товара:", bg="white", fg="black", font=("Consolas", 10))
+texbox_name_of_product = Entry(root, width=25)
+label = Label(root, text="Введите номер страницы:", bg="white", fg="black", font=("Consolas", 10))
 texbox = Entry(root, width=25)
 
 # -------------------------------------------------------------------------
@@ -46,7 +48,8 @@ def parsing():
         open_success_form()
     except:
         open_error_form()
-    url = f'https://optogadzhet.ru/product-category/apple/iphone/?page={number_of_page}'
+    name_of_product = texbox_name_of_product.get()
+    url = f'https://optogadzhet.ru/?page={number_of_page}&s={name_of_product}&post_type=product&dgwt_wcas=1'
     response = requests.get(url)
     html_content = response.text
     soup = BS(html_content, 'html.parser')
@@ -79,13 +82,15 @@ def parsing():
     # -------------------------------------------------------------------------
     # Создание .csv файла и последующая запись данных
     # -------------------------------------------------------------------------
-    with open(f'output{number_of_page}.csv', 'w', newline='', encoding="utf-8") as file:
+    with open(f'{name_of_product}_{number_of_page}.csv', 'w', newline='', encoding="utf-8") as file:
         writer = csv.writer(file, delimiter=';')
         writer.writerow(headers)
         for data in zip(lst_titles, lst_links, lst_prices_final):
             writer.writerow(data)
 
 button = Button(root, text="Начать парсинг!", width=20, height=3, command=parsing)
+label_name_of_product.pack(ipadx=20, ipady=8, pady=5, side= "top")
+texbox_name_of_product.pack(ipadx=20, ipady=0, pady=5, side= "top")
 label.pack(ipadx=20, ipady=8, pady=5, side= "top")
 texbox.pack(ipadx=20, ipady=0, pady=5, side= "top")
 button.pack(ipadx=20, ipady=8, pady=5, side= "top")
