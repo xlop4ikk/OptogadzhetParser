@@ -4,10 +4,20 @@
 
 from bs4 import BeautifulSoup as BS
 import requests
+import csv
+from tkinter import *
+import random
 
 lst_titles = []
 lst_links = []
 lst_prices = []
+headers = ['Наименование', 'Ссылка', 'Цена']
+
+root = Tk()
+root.title("OptogadzhetParser")
+root.geometry("200x100")
+root.resizable(False, False)
+root.configure(bg="white")
 
 def parsing():
     url = 'https://optogadzhet.ru/product-category/apple/iphone/'
@@ -15,19 +25,19 @@ def parsing():
     html_content = response.text
     soup = BS(html_content, 'html.parser')
     
-    print('Названия:')
+    #print('Названия:')
     titles = soup.find_all('h3', class_='card-item__title')
     for title in titles:
         lst_titles.append(title.text.strip())
     #print(lst_titles)
 
-    print('Ссылки:')
+    #print('Ссылки:')
     links = soup.find_all('a', class_='card-item__link')
     for link in links:
         lst_links.append(link.get("href"))
     #print(lst_links)
     
-    print('Цены:')
+    #print('Цены:')
     prices = soup.find_all('span', class_='woocommerce-Price-amount amount')
     for price in prices:
         lst_prices.append(price.text.strip())
@@ -37,8 +47,18 @@ def parsing():
     lst_prices_final.pop(0)
     #print(lst_prices_final)
     
-    print(len(lst_titles))
-    print(len(lst_links))
-    print(len(lst_prices_final))
+    #print(len(lst_titles))
+    #print(len(lst_links))
+    #print(len(lst_prices_final))
+    
+    random_number = random.randint(0, 100)
+    with open(f'output{random_number}.csv', 'w', newline='', encoding="utf-8") as file:
+        writer = csv.writer(file, delimiter=';')
+        writer.writerow(headers)
+        for data in zip(lst_titles, lst_links, lst_prices_final):
+            writer.writerow(data)
 
-parsing()
+#parsing()
+button = Button(root, text="Начать парсинг!", width=20, height=3, command=parsing)
+button.place(relx=0.5, rely=0.5, anchor=CENTER)
+root.mainloop()
