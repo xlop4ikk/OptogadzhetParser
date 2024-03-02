@@ -8,7 +8,6 @@ from bs4 import BeautifulSoup as BS
 from tkinter import *
 
 headers = ['Наименование', 'Ссылка', 'Цена']
-
 root = Tk()
 root.title("OptogadzhetParser")
 root.geometry("200x200")
@@ -17,18 +16,27 @@ root.configure(bg="white")
 label = Label(root, text="Введите номер страницы:", bg="white", fg="black", font=("Consolas", 11))
 texbox = Entry(root, width=25)
 
+# -------------------------------------------------------------------------
+# Дополнительная форма, выводимая при успешном парсинге
+# -------------------------------------------------------------------------
 def open_success_form():
     success_window = Toplevel(root)
     success_window.title("Успех")
     success_label = Label(success_window, text="Программа выполнена успешно!")
     success_label.pack()
 
+# -------------------------------------------------------------------------
+# Дополнительная форма, выводимая при безуспешном парсинге
+# -------------------------------------------------------------------------
 def open_error_form():
     error_window = Toplevel(root)
     error_window.title("Ошибка")
     error_label = Label(error_window, text="Произошла ошибка в программе.")
     error_label.pack()
 
+# -------------------------------------------------------------------------
+# Основной метод для парсинга сайта
+# -------------------------------------------------------------------------
 def parsing():
     lst_titles = []
     lst_links = []
